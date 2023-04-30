@@ -1,0 +1,13 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Category RESTful API",
+		"description": "API Spec for Category RESTful API",
+		"verstion": "1.0.0",
+	},
+	"server": [
+		{
+			"url": "http://localhost:8000/api"
+		}
+	]
+}
