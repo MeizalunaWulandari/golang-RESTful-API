@@ -89,7 +89,44 @@
                   }
                }
             }
-         }
+         },
+      },
+      "/categories/{categoryId}":{
+      	"get":{
+      		"tag": "[Category API]",
+      		"summary":"Get category by id",
+      		"description":"Get category by id",
+      		"parameters":[
+      			{
+      				"name": "categoryId",
+      				"in": "path",
+      				"description":"Category id"
+      			}
+      		],
+      		"response":{
+      			"200":{
+      				"description": "Success get category",
+      				"content":{
+      					"application/json":{
+      						"schema":{
+      							"type":"object",
+      							"properties":{
+      								"code":{
+      									"type": "number"
+      								},
+      								"status":{
+      									"type":"string"
+      								},
+      								"data":{
+      									"$ref":"#components/schemas/Category"
+      								}
+      							}
+      						}
+      					}
+      				}
+      			}
+      		}
+      	}
       }
    },
    "components":{
