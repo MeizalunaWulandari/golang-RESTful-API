@@ -1,52 +1,110 @@
 {
-	"openapi": "3.0.3",
-	"info": "Category RESTful API",
-	"description": "Category Spec RESTful API",
-	"version": "1.0.0"
-},
-"servers":[
-	{
-		"url": "http://localhost:8000/api",
-	}
-],
-"paths":{
-	"/categories":{
-		"get":{
-			"description": "List all categories",
-			"response":{
-				"200":{
-					"description": "Success get all categories",
-					"content":{
-						"application/json":{
-							"schema":{
-								"type":"object",
-								"properties":{
-									"code":{
-										"type": "number"
-									},
-									"status":{
-										"type":"string"
-									},
-									"data":{
-										"type":"array",
-										"items":{
-											"type":"object",
-											"properties":{
-												"id": {
-													"type": "number"
-												},
-												"name":{
-													"type": "string"
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+   "openapi":"3.0.3",
+   "info":"Category RESTful API",
+   "description":"Category Spec RESTful API",
+   "version":"1.0.0",
+   "servers":[
+      {
+         "url":"http://localhost:8000/api"
+      }
+   ],
+   "paths":{
+      "/categories":{
+         "get":{
+            "tag":[
+               "Category API"
+            ],
+            "description":"List all categories",
+            "summary":"List all categories",
+            "response":{
+               "200":{
+                  "description":"Success get all categories",
+                  "content":{
+                     "application/json":{
+                        "schema":{
+                           "type":"object",
+                           "properties":{
+                              "code":{
+                                 "type":"number"
+                              },
+                              "status":{
+                                 "type":"string"
+                              },
+                              "data":{
+                                 "type":"array",
+                                 "items":{
+                                    "$ref":"#/components/schemas/Category"
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         },
+         "post":{
+            "tag":[
+               "Category API"
+            ],
+            "description":"Create new category",
+            "summary":"Create new category",
+            "requestBody":{
+               "content":{
+                  "application/json":{
+                     "schema":{
+                        "type":"object",
+                        "properties":{
+                           "code":{
+                              "type":"number"
+                           },
+                           "status":{
+                              "type":"string"
+                           },
+                           "data":{
+                              "$ref":"#/components/schemas/Category"
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            "response":{
+               "200":{
+                  "description":"Success Create Category",
+                  "content":{
+                     "application/json":{
+                        "schema":{
+                           "type":"object",
+                           "properties":{
+                              "id":{
+                                 "type":"number"
+                              },
+                              "name":{
+                                 "type":"string"
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   },
+   "components":{
+      "schemas":{
+         "Category":{
+            "type":"object",
+            "properties":{
+               "id":{
+                  "type":"number"
+               },
+               "name":{
+                  "type":"string"
+               }
+            }
+         }
+      }
+   }
 }
