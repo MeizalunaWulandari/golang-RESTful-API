@@ -3,10 +3,13 @@ package main
 import (
 	"golang-resful-api/app"
 	"golang-resful-api/controller"
+	"golang-resful-api/helper"
 	"golang-resful-api/repository"
 	"golang-resful-api/service"
+	"net/http"
 
 	"github.com/go-playground/validator"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -24,4 +27,11 @@ func main() {
 	router.POST("/api/categories", categoryController.Create)
 	router.PUT("/api/categories/{:categoryId}", categoryController.Update)
 	router.DELETE("/api/categories/{:categoryId}", categoryController.Delete)
+
+	server := http.Server{
+		Addr:    "localhost:8000",
+		Handler: router,
+	}
+	err := server.ListenAndServe()
+	helper.PanicIfError(err)
 }
