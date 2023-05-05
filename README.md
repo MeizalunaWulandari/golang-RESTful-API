@@ -47,6 +47,13 @@ curl -X PUT "http://localhost:8000/api/categories/1" \
      -d '{"name": "Fashion"}'
 ```
 
+### Delete Category By Id
+```
+curl -X DELETE "http://localhost:8000/api/categories/2" \
+     -H "Accept: application/json"
+
+```
+
 ## Ragam Error
 
 ```
