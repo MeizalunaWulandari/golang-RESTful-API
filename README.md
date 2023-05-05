@@ -33,6 +33,12 @@ curl -X POST "http://localhost:8000/api/categories" \
      -d '{"name": "Gadget"}'
 
 ```
+### Get Category By Id
+```
+curl -X GET "http://localhost:8000/api/categories/1" \
+     -H "Accept: application/json"
+
+```
 
 ## Ragam Error
 
