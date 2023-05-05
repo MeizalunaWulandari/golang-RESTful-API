@@ -53,6 +53,13 @@ curl -X DELETE "http://localhost:8000/api/categories/2" \
      -H "Accept: application/json"
 
 ```
+### Create Category Blank
+```
+curl -X POST "http://localhost:8000/api/categories" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{"name": ""}'
+```
 
 ## Ragam Error
 
