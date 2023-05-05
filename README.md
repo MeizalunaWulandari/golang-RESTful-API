@@ -19,14 +19,14 @@ Validation: https://github.com/go-playground/validator<br>
 
 ## Manual Testing
 ### Get All Categories
-```
+```curl
 curl -X GET "http://localhost:8000/api/categories" \
      -H "Accept: application/json" \
      -H "Content-Type: application/json"
 
 ```
 ### Create New Category
-```
+```curl
 curl -X POST "http://localhost:8000/api/categories" \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
@@ -34,13 +34,13 @@ curl -X POST "http://localhost:8000/api/categories" \
 
 ```
 ### Get Category By Id
-```
+```curl
 curl -X GET "http://localhost:8000/api/categories/1" \
      -H "Accept: application/json"
 
 ```
 ### Update Category By Id
-```
+```curl
 curl -X PUT "http://localhost:8000/api/categories/1" \
      -H "Accept: application/json" \
      -H "Content-Type: application/json" \
@@ -164,10 +164,48 @@ created by net/http.(*Server).Serve
 	/usr/lib/go-1.18/src/net/http/server.go:3071 +0x4db
 ```
 Terjadi karena salah pada query ke database, solusinya rubah
-```
+```sql
 SELECT id, name WHERE id = ?
 ```
 jadi
 ```
 SELECT id, name FROM category WHERE id = ?
+```
+
+```
+mysql] 2023/05/05 14:57:23 connection.go:299: invalid connection
+2023/05/05 14:57:23 http: panic serving 127.0.0.1:55576: invalid connection
+goroutine 34 [running]:
+net/http.(*conn).serve.func1()
+	/usr/lib/go-1.18/src/net/http/server.go:1825 +0xbf
+panic({0x6b2120, 0xc00016ef40})
+	/usr/lib/go-1.18/src/runtime/panic.go:844 +0x258
+golang-resful-api/helper.PanicIfError(...)
+	/home/bismillah/GoLang/src/golang-resful-api/helper/error.go:5
+golang-resful-api/helper.CommitOrRollback(0xc000099660?)
+	/home/bismillah/GoLang/src/golang-resful-api/helper/tx.go:9 +0x7c
+panic({0x6b2120, 0xc000012270})
+	/usr/lib/go-1.18/src/runtime/panic.go:838 +0x207
+golang-resful-api/helper.PanicIfError(...)
+	/home/bismillah/GoLang/src/golang-resful-api/helper/error.go:5
+golang-resful-api/repository.(*CategoryRepositoryImpl).Update(0xc00006a300?, {0x780230, 0xc00029e0c0}, 0x6cb560?, {0xc0002ac090?, {0xc00029c0d0?, 0x0?}})
+	/home/bismillah/GoLang/src/golang-resful-api/repository/category_repository_impl.go:33 +0x105
+golang-resful-api/service.(*CategoryServiceImpl).Update(0xc000027f80, {0x780230, 0xc00029e0c0}, {0xc00029e100?, {0xc00029c0d0?, 0x7f0195b5d0e8?}})
+	/home/bismillah/GoLang/src/golang-resful-api/service/category_service_impl.go:57 +0x1c4
+golang-resful-api/controller.(*CategoryControllerImpl).Update(0xc00016f6c0, {0x780080, 0xc0002b2000}, 0xc0002a2000, {0xc000292020, 0x1, 0xc000288044?})
+	/home/bismillah/GoLang/src/golang-resful-api/controller/category_controller_impl.go:46 +0x185
+github.com/julienschmidt/httprouter.(*Router).ServeHTTP(0xc00006a360, {0x780080, 0xc0002b2000}, 0xc0002a2000)
+	/home/bismillah/GoLang/pkg/mod/github.com/julienschmidt/httprouter@v1.3.0/router.go:387 +0x82b
+net/http.serverHandler.ServeHTTP({0x77f430?}, {0x780080, 0xc0002b2000}, 0xc0002a2000)
+	/usr/lib/go-1.18/src/net/http/server.go:2916 +0x43b
+net/http.(*conn).serve(0xc000290000, {0x7802d8, 0xc00017edb0})
+	/usr/lib/go-1.18/src/net/http/server.go:1966 +0x5d7
+created by net/http.(*Server).Serve
+	/usr/lib/go-1.18/src/net/http/server.go:3071 +0x4db
+clera
+```
+Terjadi karena mengirim beberapa perintah, namun perintah salah satu perintahnya belum ditutup
+Solusinya tutup koneksi ke database setelah selesai melakukan query
+```go
+defer rows.Close()
 ```
