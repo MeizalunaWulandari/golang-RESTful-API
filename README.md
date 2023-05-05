@@ -39,6 +39,13 @@ curl -X GET "http://localhost:8000/api/categories/1" \
      -H "Accept: application/json"
 
 ```
+### Update Category By Id
+```
+curl -X PUT "http://localhost:8000/api/categories/1" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Fashion"}'
+```
 
 ## Ragam Error
 
