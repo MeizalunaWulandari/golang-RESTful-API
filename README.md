@@ -148,41 +148,12 @@ net/http.(*conn).serve(0xc000228140, {0x7802d8, 0xc0001cadb0})
 created by net/http.(*Server).Serve
 	/usr/lib/go-1.18/src/net/http/server.go:3071 +0x4db
 ```
-Terjadi karena salah pada query ke database 
-```
-2023/05/05 14:38:25 http: panic serving 127.0.0.1:55568: Error 1054 (42S22): Unknown column 'id' in 'field list'
-goroutine 23 [running]:
-net/http.(*conn).serve.func1()
-	/usr/lib/go-1.18/src/net/http/server.go:1825 +0xbf
-panic({0x6ba900, 0xc0000b02e8})
-	/usr/lib/go-1.18/src/runtime/panic.go:844 +0x258
-golang-resful-api/helper.CommitOrRollback(0xc00006c100?)
-	/home/bismillah/GoLang/src/golang-resful-api/helper/tx.go:10 +0x8b
-panic({0x6ba900, 0xc0000b02e8})
-	/usr/lib/go-1.18/src/runtime/panic.go:838 +0x207
-golang-resful-api/helper.PanicIfError(...)
-	/home/bismillah/GoLang/src/golang-resful-api/helper/error.go:5
-golang-resful-api/repository.(*CategoryRepositoryImpl).FindById(0x203000?, {0x780230, 0xc00006c100}, 0xc000026060?, 0x7f0cdd517e50?)
-	/home/bismillah/GoLang/src/golang-resful-api/repository/category_repository_impl.go:46 +0x1ab
-golang-resful-api/service.(*CategoryServiceImpl).FindById(0xc0000d3f40, {0x780230, 0xc00006c100}, 0x18?)
-	/home/bismillah/GoLang/src/golang-resful-api/service/category_service_impl.go:76 +0xd9
-golang-resful-api/controller.(*CategoryControllerImpl).FindById(0xc0001bb6a0, {0x780080, 0xc000282000}, 0xc00007c000, {0xc000026060, 0x1, 0xc000020113?})
-	/home/bismillah/GoLang/src/golang-resful-api/controller/category_controller_impl.go:75 +0x15b
-github.com/julienschmidt/httprouter.(*Router).ServeHTTP(0xc000092360, {0x780080, 0xc000282000}, 0xc00007c000)
-	/home/bismillah/GoLang/pkg/mod/github.com/julienschmidt/httprouter@v1.3.0/router.go:387 +0x82b
-net/http.serverHandler.ServeHTTP({0xc00006a030?}, {0x780080, 0xc000282000}, 0xc00007c000)
-	/usr/lib/go-1.18/src/net/http/server.go:2916 +0x43b
-net/http.(*conn).serve(0xc000228140, {0x7802d8, 0xc0001cadb0})
-	/usr/lib/go-1.18/src/net/http/server.go:1966 +0x5d7
-created by net/http.(*Server).Serve
-	/usr/lib/go-1.18/src/net/http/server.go:3071 +0x4db
-```
 Terjadi karena salah pada query ke database, solusinya rubah
 ```sql
 SELECT id, name WHERE id = ?
 ```
 jadi
-```
+```sql
 SELECT id, name FROM category WHERE id = ?
 ```
 
