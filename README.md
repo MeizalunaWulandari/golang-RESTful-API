@@ -17,6 +17,23 @@ Validation: https://github.com/go-playground/validator<br>
 		)engine = InnoDB;
 ```
 
+## Manual Testing
+### Get All Categories
+```
+curl -X GET "http://localhost:8000/api/categories" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json"
+
+```
+### Create New Category
+```
+curl -X POST "http://localhost:8000/api/categories" \
+     -H "Accept: application/json" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "Gadget"}'
+
+```
+
 ## Ragam Error
 
 ```
@@ -43,4 +60,4 @@ created by net/http.(*Server).Serve
 ^Csignal: interrupt
 
 ```
-terjadi karena typo pada file pada hostname
+Terjadi karena typo pada file pada hostname
