@@ -227,3 +227,24 @@ func TestDeleteCategorySuccess(t *testing.T) {
 	assert.Equal(t, 200, int(responseBody["code"].(float64)))
 	assert.Equal(t, "OK", responseBody["status"])
 }
+
+func TestDeleteCategoryFailed(t *testing.T) {
+	db := setupTestDB()
+	TruncateCategory(db)
+	router := setupRouter(db)
+	request := httptest.NewRequest(http.MethodDelete, "http://localhost:8000/api/categories/404", nil)
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("X-API-Key", "RAHASIA")
+
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, request)
+	response := recorder.Result()
+	assert.Equal(t, 404, response.StatusCode)
+
+	body, _ := io.ReadAll(response.Body)
+	var responseBody map[string]interface{}
+	json.Unmarshal(body, &responseBody)
+
+	assert.Equal(t, 404, int(responseBody["code"].(float64)))
+	assert.Equal(t, "NOT FOUND", responseBody["status"])
+}
