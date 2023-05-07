@@ -1,17 +1,20 @@
 package test
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"golang-resful-api/app"
 	"golang-resful-api/controller"
 	"golang-resful-api/helper"
 	"golang-resful-api/middleware"
+	"golang-resful-api/model/domain"
 	"golang-resful-api/repository"
 	"golang-resful-api/service"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -88,5 +91,38 @@ func TestCreateCategoryFailed(t *testing.T) {
 
 	assert.Equal(t, 400, int(responseBody["code"].(float64)))
 	assert.Equal(t, "BAD REQUEST", responseBody["status"])
+
+}
+
+func TestUpdateCategorySuccess(t *testing.T) {
+	db := setupTestDB()
+	TruncateCategory(db)
+
+	tx, _ := db.Begin()
+	categoryRepository := repository.NewCategoryRepository()
+	category := categoryRepository.Save(context.Background(), tx, domain.Category{
+		Name: "Gadget",
+	})
+	tx.Commit()
+
+	router := setupRouter(db)
+	requestBody := strings.NewReader(`{"name": "Gadget Updated"}`)
+	request := httptest.NewRequest(http.MethodPut, "http://localhost:8000/api/categories/"+strconv.Itoa(category.Id), requestBody)
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("X-API-Key", "RAHASIA")
+
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, request)
+	response := recorder.Result()
+	assert.Equal(t, 200, response.StatusCode)
+
+	body, _ := io.ReadAll(response.Body)
+	var responseBody map[string]interface{}
+	json.Unmarshal(body, &responseBody)
+
+	assert.Equal(t, 200, int(responseBody["code"].(float64)))
+	assert.Equal(t, "OK", responseBody["status"])
+	assert.Equal(t, category.Id, int(responseBody["data"].(map[string]interface{})["id"].(float64)))
+	assert.Equal(t, "Gadget Updated", responseBody["data"].(map[string]interface{})["name"])
 
 }
