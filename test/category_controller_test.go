@@ -91,7 +91,6 @@ func TestCreateCategoryFailed(t *testing.T) {
 
 	assert.Equal(t, 400, int(responseBody["code"].(float64)))
 	assert.Equal(t, "BAD REQUEST", responseBody["status"])
-
 }
 
 func TestUpdateCategorySuccess(t *testing.T) {
@@ -124,5 +123,27 @@ func TestUpdateCategorySuccess(t *testing.T) {
 	assert.Equal(t, "OK", responseBody["status"])
 	assert.Equal(t, category.Id, int(responseBody["data"].(map[string]interface{})["id"].(float64)))
 	assert.Equal(t, "Gadget Updated", responseBody["data"].(map[string]interface{})["name"])
+}
+
+func TestUpdateCategoryFailed(t *testing.T) {
+	db := setupTestDB()
+	TruncateCategory(db)
+	router := setupRouter(db)
+	requestBody := strings.NewReader(`{"name": ""}`)
+	request := httptest.NewRequest(http.MethodPost, "http://localhost:8000/api/categories", requestBody)
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("X-API-Key", "RAHASIA")
+
+	recorder := httptest.NewRecorder()
+	router.ServeHTTP(recorder, request)
+	response := recorder.Result()
+	assert.Equal(t, 400, response.StatusCode)
+
+	body, _ := io.ReadAll(response.Body)
+	var responseBody map[string]interface{}
+	json.Unmarshal(body, &responseBody)
+
+	assert.Equal(t, 400, int(responseBody["code"].(float64)))
+	assert.Equal(t, "BAD REQUEST", responseBody["status"])
 
 }
